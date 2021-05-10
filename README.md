@@ -28,7 +28,9 @@ This script installs docker and docker compose on the system.
 
 ---
 ## _**Homeserver_install**_
-Contains the scripts needed to set up a variety of home server builds based on the components you choose in the install process. 
+Contains the scripts needed to set up a variety of home server builds based on the components you choose in the install process.
+The scripts will generate an environent file and a docker-compose.yml. Please make sure you check the onfig before pulling up the containers.
+
 
 
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 ##################################################################################################
-#    This is a setup bash for the environment variables needed to run the docker containers      #        
-#    make executable with:                                                                       # 
+#    This is a setup bash for the environment variables needed to run the docker containers      #
+#    make executable with:                                                                       #
 #        chmod 0755 Docker_install.sh or chmod +x Docker_install.sh                              #
 #    excute in terminal via source ./installer.sh                                                #
 # WARNING: Always examine scripts downloaded from the internet before running them locally!!     #

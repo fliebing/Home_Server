@@ -34,13 +34,14 @@ The docker instal script was built in order to help set up docker in a bare-bone
 ---
 ## _**Docker_install**_
 This script installs docker and docker compose on the system.
+
 _Instructions:_
--------------------------------------------------------------------------------------------------
-|    This is a setup bash for the environment variables needed to run the docker containers      |
-|    make executable with:                                                                       |
-|        sudo chmod 0755 Docker_install.sh or sudo chmod +x Docker_install.sh                    |
-|    excute in terminal via source ./installer.sh                                                |
--------------------------------------------------------------------------------------------------
+---
+   This is a setup bash for the environment variables needed to run the docker containers      
+    make executable with:                                                                       
+        sudo chmod 0755 Docker_install.sh or sudo chmod +x Docker_install.sh                    
+    excute in terminal via source ./installer.sh                                                
+---
 
 ---
 ## _**Homeserver_install**_
@@ -72,12 +73,12 @@ The scripts will generate an environent file and a docker-compose.yml. Please ma
  
 
 _Instructions:_
--------------------------------------------------------------------------------------------------
-#    This is a setup bash for the environment variables needed to run the docker containers      #
-#    make executable with:                                                                       #
-#        sudo chmod 0755 default_config.sh or sudo chmod +x default_config.sh                              #
-#    excute in terminal via source ./default_config.sh                                           #
--------------------------------------------------------------------------------------------------
+---
+    This is a setup bash for the environment variables needed to run the docker containers      
+   make executable with:                                                                       
+        sudo chmod 0755 default_config.sh or sudo chmod +x default_config.sh                  
+    excute in terminal via source ./default_config.sh                                           
+---
 
 
 

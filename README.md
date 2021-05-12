@@ -32,17 +32,22 @@ You can always edit this in order to customize for your environment. The idea is
 The docker instal script was built in order to help set up docker in a bare-bones Debian 10 buster system. I am going to test in other distros as I need them.
 
 ---
+
 ## _**Docker_install**_
+
 This script installs docker and docker compose on the system.
+
+
 _Instructions:_
--------------------------------------------------------------------------------------------------
-|    This is a setup bash for the environment variables needed to run the docker containers      |
-|    make executable with:                                                                       |
-|        sudo chmod 0755 Docker_install.sh or sudo chmod +x Docker_install.sh                    |
-|    excute in terminal via source ./installer.sh                                                |
--------------------------------------------------------------------------------------------------
 
 ---
+>     This is a setup bash for the environment variables needed to run the docker containers
+> make executable with:
+>         sudo chmod 0755 Docker_install.sh or sudo chmod +x Docker_install.sh
+> excute in terminal via source ./installer.sh
+---
+---
+
 ## _**Homeserver_install**_
 Contains the scripts needed to set up a variety of home server builds based on the components you choose in the install process.
 The scripts will generate an environent file and a docker-compose.yml. Please make sure you check the onfig before pulling up the containers.
@@ -67,17 +72,16 @@ The scripts will generate an environent file and a docker-compose.yml. Please ma
 14. lidarr: Music Download and Management
 ---
 15. FREEPBX: Asterisk based PBX (use as a sip gateway if within docker, please read up on issues with virtualizing PBX in docker)
-
-
  
 
 _Instructions:_
--------------------------------------------------------------------------------------------------
-#    This is a setup bash for the environment variables needed to run the docker containers      #
-#    make executable with:                                                                       #
-#        sudo chmod 0755 default_config.sh or sudo chmod +x default_config.sh                              #
-#    excute in terminal via source ./default_config.sh                                           #
--------------------------------------------------------------------------------------------------
+
+---
+> This is a setup bash for the environment variables needed to run the docker containers
+> make executable with:  
+>        sudo chmod 0755 default_config.sh or sudo chmod +x default_config.sh 
+> excute in terminal via source ./default_config.sh 
+---
 
 
 

@@ -40,10 +40,10 @@ This script installs docker and docker compose on the system.
 _Instructions:_
 
 ---
->     This is a setup bash for the environment variables needed to run the docker containers
-> make executable with:
->         sudo chmod 0755 Docker_install.sh or sudo chmod +x Docker_install.sh
-> excute in terminal via source ./installer.sh
+> This is a setup bash for the environment variables needed to run the docker containers
+> make executable with:  
+>        sudo chmod 0755 Docker_install.sh or sudo chmod +x Docker_install.sh 
+> excute in terminal via source ./Docker_install.sh 
 ---
 ---
 

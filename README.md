@@ -5,7 +5,6 @@ Docker Compose code for different home server configurations.
 I am updating this code based on a Debian 10 distribution, and will test with other builds in the future.
 
 ---
----
 
 # Change Control
 Please wait for the code to be tested before using

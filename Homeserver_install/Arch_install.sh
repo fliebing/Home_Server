@@ -8,9 +8,8 @@ ip addr show
 echo "DO NOT USE THIS SCRIPT, it is not yet completed."
 echo -n "Do you want to configure wifi? [yes or no]: "
 read yno
-case $yno in
-
-        [yY] | [yY][Ee][Ss] )
+case "$yno" in
+         [yY] | [yY][Ee][Ss])
                 echo "Configuring Wlan adapter" 
                 read -p 'WIFI device id (wlan0): ' wlanhw 
                 if $wlanhw = "" then $wlanhw = "wlan0"
@@ -18,12 +17,12 @@ case $yno in
                 read -sp 'Passphrase:' wifipassphrase 
                 iwctl --passphrase $wifipassphrase station $wlanhw connect $ssid
                 ip addr show 
-
+                ;;
         [nN] | [n|N][O|o] )
                 echo "continue with wired lan only"
-
+                ;;
         *) echo "Invalid input"
-            
+                ;;
 esac
 read -p 'what is your disk device called? (/dev/sda):' TGTDEV
 echo -n "Do you want to install on UEFI device? [yes or no]: "
@@ -58,7 +57,7 @@ EOF
                 $TGTDEV='/dev/sda1'
                 mkfs.fat -F32 $TGTDEV
                 $TGTDEV='/dev/sda2'
-                
+                ;;
 
         [nN] | [n|N][O|o] )
                 echo "non-UEFI use this for mac mini"
@@ -82,9 +81,9 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk $TGTDEV
   w # write the partition table
   q # and we're done
 EOF
-                
+                ;;
         *) echo "Invalid input"
-            
+                ;;
 esac
 
 

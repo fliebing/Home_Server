@@ -15,7 +15,8 @@ Date | Changes | Tested
  MAY/6/2021 | V1.0 Homeserver environment Variables build script | YES
  MAY/7/2021 | V1.1 Homeserver now includes docker-compose.yaml creation | YES
  MAY/8/2021 | V1.11 Homeserver now includes freepbx option | NO
-
+ JUL/1/2021 | V1 Arch_install script | NO
+ 
 > **_WARNING: Always examine scripts downloaded from the internet before running them locally!!_** > 
 
 ---

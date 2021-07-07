@@ -11,13 +11,13 @@ read yno
 case $yno in
 
         [yY] | [yY][Ee][Ss] )
-                echo "Configuring Wlan adapter"
-                read -p 'WIFI device id (wlan0): ' wlanhw
-                if $wlanhw = "" then $wlanhw = "wlan0"
-                read -p 'WIFI SSID: ' ssid
-                read -sp 'Passphrase:' wifipassphrase
-                iwctl --passphrase $wifipassphrase station $wlanhw connect $ssid
-                ip addr show
+                echo "Configuring Wlan adapter" ;
+                read -p 'WIFI device id (wlan0): ' wlanhw ; 
+                if $wlanhw = "" then $wlanhw = "wlan0" ;
+                read -p 'WIFI SSID: ' ssid ; 
+                read -sp 'Passphrase:' wifipassphrase ;
+                iwctl --passphrase $wifipassphrase station $wlanhw connect $ssid ;
+                ip addr show ;
                 ;;
 
         [nN] | [n|N][O|o] )

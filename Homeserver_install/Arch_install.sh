@@ -18,13 +18,12 @@ case $yno in
                 read -sp 'Passphrase:' wifipassphrase 
                 iwctl --passphrase $wifipassphrase station $wlanhw connect $ssid
                 ip addr show 
-                ;
 
         [nN] | [n|N][O|o] )
-                echo "continue with wired lan only";
-                ;
+                echo "continue with wired lan only"
+
         *) echo "Invalid input"
-            ;
+            
 esac
 read -p 'what is your disk device called? (/dev/sda):' TGTDEV
 echo -n "Do you want to install on UEFI device? [yes or no]: "

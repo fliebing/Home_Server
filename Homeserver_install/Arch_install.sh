@@ -12,7 +12,10 @@ case "$yno" in
          [yY] | [yY][Ee][Ss])
                 echo "Configuring Wlan adapter" 
                 read -p 'WIFI device id (wlan0): ' wlanhw 
-                if $wlanhw = "" then $wlanhw = "wlan0"
+                if $wlanhw = "" 
+                then 
+                    $wlanhw = "wlan0"
+                fi
                 read -p 'WIFI SSID: ' ssid 
                 read -sp 'Passphrase:' wifipassphrase 
                 iwctl --passphrase $wifipassphrase station $wlanhw connect $ssid

@@ -12,7 +12,7 @@ case "$yno" in
          [yY] | [yY][Ee][Ss])
                 echo "Configuring Wlan adapter" 
                 read -p 'WIFI device id (wlan0): ' wlanhw 
-                if $wlanhw = "" 
+                if $wlanhw = '' 
                 then 
                     $wlanhw = "wlan0"
                 fi
@@ -49,17 +49,16 @@ case $yno in
   t # partition type
   1 # type 1 EFI filesystem
   n # new partition
-    # default - Primary Partition 
+    # default -  Partition 
     # default - start at beginning of disk 
     # rest of disk size partition
   t # partition type
   30 # type 30 Linux LVM
-  p # print the in-memory partition table
   w # write the partition table
 EOF
-                $TGTDEV='/dev/sda1'
+                TGTDEV='/dev/sda1'
                 mkfs.fat -F32 $TGTDEV
-                $TGTDEV='/dev/sda2'
+                TGTDEV='/dev/sda2'
                 ;;
 
         [nN] | [n|N][O|o] )
@@ -80,9 +79,7 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk $TGTDEV
   t # partition type
   8e # type 8e LVM
   a # make a partition bootable
-  p # print the in-memory partition table
   w # write the partition table
-  q # and we're done
 EOF
                 ;;
         *) echo "Invalid input"

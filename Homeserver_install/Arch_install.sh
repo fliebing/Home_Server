@@ -14,7 +14,7 @@ case $yno in
                 echo "Configuring Wlan adapter" 
                 read -p 'WIFI device id (wlan0): ' wlanhw 
                 if $wlanhw = "" then $wlanhw = "wlan0"
-                read -p 'WIFI SSID: ' ssid ; 
+                read -p 'WIFI SSID: ' ssid 
                 read -sp 'Passphrase:' wifipassphrase 
                 iwctl --passphrase $wifipassphrase station $wlanhw connect $ssid
                 ip addr show 
@@ -58,7 +58,7 @@ EOF
                 $TGTDEV='/dev/sda1'
                 mkfs.fat -F32 $TGTDEV
                 $TGTDEV='/dev/sda2'
-                ;
+                
 
         [nN] | [n|N][O|o] )
                 echo "non-UEFI use this for mac mini"
@@ -82,9 +82,9 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk $TGTDEV
   w # write the partition table
   q # and we're done
 EOF
-                ;
+                
         *) echo "Invalid input"
-            ;
+            
 esac
 
 
@@ -104,5 +104,3 @@ mkdir /mnt/etc
 mount /dev/volgroup0/lv_home /mnt/home
 genfstab -U -p /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
-
-

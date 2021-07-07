@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+clear
 
 echo "Please make sure you booted from the ARCH linux CD"
 echo "Verifying Networking"
@@ -27,6 +27,9 @@ case "$yno" in
         *) echo "Invalid input"
                 ;;
 esac
+clear
+echo ""
+echo ""
 read -p 'what is your disk device called? (/dev/sda):' TGTDEV
 echo -n "Do you want to install on UEFI device? [yes or no]: "
 read yno

@@ -180,6 +180,8 @@ echo ""
 echo ""
 echo "install GRUB (FINALLY able to boot from HDD)"
 sleep 10
+echo -n "Do you want to install on UEFI device? [yes or no]: "
+read uefiyno
         case $uefiyno in
 
                 [yY] | [yY][Ee][Ss] )

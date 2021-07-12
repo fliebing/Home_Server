@@ -136,3 +136,57 @@ EOF
 clear
 echo ""
 echo ""
+echo "now ACTUALLY installing Arch"
+pacstrap -i /mnt base
+arch-chroot /mnt
+pacman -S linux linux-headers
+pacman -S lvm2 base-devel nano networkmanager wpa-supplicant wieless_tools netctl openssh dialog 
+systemctl enable sshd
+systemctl enable NetworkManager
+sed -i 's/HOOKS=(base udev autodetect modconf block filesystems/HOOKS=(base udev autodetect modconf block lvm2 filesystems/g' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+clear
+echo ""
+echo ""
+locale-gen
+pacman -S sudo
+clear
+echo ""
+echo ""
+echo "install GRUB (FINALLY able to boot from HDD)"
+        case $uefiyno in
+
+                [yY] | [yY][Ee][Ss] )
+                        echo "UEFI use"
+                        pacman -S grub efibootmgr dosfstools os-prober mtools
+                        mkdir /boot/EFI
+                        mount /dev/sda1 /boot/EFI
+                        grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+                ;;
+                
+                [nN] | [n|N][O|o] )
+                        echo "NON-UEFI use"
+                        pacman -S grub dosfstools os-prober mtools
+                        grub-install --target=i386-pc --recheck /dev/sda
+                ;;
+                
+                *) echo "Invalid input"
+                exit 1
+                ;;
+        esac
+
+cp /usr/share/locale/en\@quot/LC MESSAGES/grub.mo /boot/grub/locale/en.mo
+sed -i 's/GRUB_GFXMODE=AUTO/GRUB_GFXMODE=1440x900x32/g' /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+#Generate password for root and new user
+passwd
+read -p "please enter your new user id:" newuser
+useradd -m -g users -G wheel $newuser
+passwd $newuser
+echo "uncomment %wheel ALL=(ALL) ALL"
+wait 20
+EDITOR=nano visudo
+echo "DONE"
+wait 10
+reboot

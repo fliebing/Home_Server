@@ -45,7 +45,7 @@ EOF
                                 TGTDEV='/dev/sda2'
 
                                 echo "Done partitioning"
-                                wait 10
+                                sleep 10
                                 ;;
 
                         [nN] | [n|N][O|o] )
@@ -70,7 +70,7 @@ EOF
   w # write the partition table
 EOF
                                 echo "Done partitioning non-UEFI"
-                                wait 20
+                                sleep 20
                                 ;;
                         *) echo "Invalid input"
                                 exit 1
@@ -127,7 +127,7 @@ EOF
                         [yY] | [yY][Ee][Ss])
                                 echo "Configuring Wlan adapter" 
                                 read -p 'WIFI device id (wlan0): ' wlanhw 
-                                if wlanhw = '' 
+                                if $wlanhw = '' 
                                 then 
                                     wlanhw = "wlan0"
                                 fi
@@ -154,22 +154,32 @@ echo ""
 echo "now ACTUALLY installing Arch"
 pacstrap -i /mnt base
 arch-chroot /mnt
+echo "install linux"
 pacman -S linux linux-headers
+echo "Install additional packages"
 pacman -S lvm2 base-devel nano networkmanager wpa-supplicant wieless_tools netctl openssh dialog 
+echo "enable sshd and Networkmanager"
 systemctl enable sshd
 systemctl enable NetworkManager
+echo "update hooks"
 sed -i 's/HOOKS=(base udev autodetect modconf block filesystems/HOOKS=(base udev autodetect modconf block lvm2 filesystems/g' /etc/mkinitcpio.conf
+echo "generate new hooks"
 mkinitcpio -p linux
+sleep 20
+echo "configure locale"
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 clear
 echo ""
 echo ""
 locale-gen
+sleep 10
 pacman -S sudo
+sleep 10
 clear
 echo ""
 echo ""
 echo "install GRUB (FINALLY able to boot from HDD)"
+sleep 10
         case $uefiyno in
 
                 [yY] | [yY][Ee][Ss] )
@@ -190,18 +200,24 @@ echo "install GRUB (FINALLY able to boot from HDD)"
                 exit 1
                 ;;
         esac
-
+clear
+echo ""
+echo ""
+echo "copy grub messages"
 cp /usr/share/locale/en\@quot/LC MESSAGES/grub.mo /boot/grub/locale/en.mo
+echo "change resolution for startup"
 sed -i 's/GRUB_GFXMODE=AUTO/GRUB_GFXMODE=1920x1080x32/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
+sleep 10
+clear
 #Generate password for root and new user
 passwd
 read -p "please enter your new user id:" newuser
 useradd -m -g users -G wheel $newuser
 passwd $newuser
 echo "uncomment %wheel ALL=(ALL) ALL"
-wait 20
+sleep 20
 EDITOR=nano visudo
 echo "DONE"
-wait 10
+sleep 50
 reboot

@@ -4,7 +4,7 @@ clear
 echo ""
 echo ""
 echo "Please make sure you booted from the ARCH linux CD"
-read "Do you want to partition the system?: " part_script
+read -p "Do you want to partition the system?: " part_script
 case $part_script in
 
         [yY] | [yY][Ee][Ss] )
@@ -21,20 +21,20 @@ case $part_script in
                                 # document what we're doing in-line with the actual commands
                                 # Note that a blank line (commented as "defualt" will send a empty
                                 # line terminated with a newline to take the fdisk default.
-                                sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk $TGTDEV
+                                sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk --wipe=always $TGTDEV
   g # clear the in memory partition table
   n # new partition
     # default - Primary Partition 
     # default - start at beginning of disk 
   +500M  # 500M disk partition
-  Y # Remove signature - only needed if disk is not new
+  Y # Wipe signature
   t # partition type
   1 # type 1 EFI filesystem
   n # new partition
     # default -  Partition 
     # default - start at beginning of disk 
     # rest of disk size partition
-  Y # Remove signature - only needed if disk is not new
+  Y # Wipe signature
   t # partition type
     # default -  Partition #2
   30 # type 30 Linux LVM
@@ -43,6 +43,9 @@ EOF
                                 TGTDEV='/dev/sda1'
                                 mkfs.fat -F32 $TGTDEV
                                 TGTDEV='/dev/sda2'
+
+                                echo "Done partitioning"
+                                wait 10
                                 ;;
 
                         [nN] | [n|N][O|o] )
@@ -53,18 +56,21 @@ EOF
                                 # document what we're doing in-line with the actual commands
                                 # Note that a blank line (commented as "defualt" will send a empty
                                 # line terminated with a newline to take the fdisk default.
-                                sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk $TGTDEV
+                                sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk --wipe=always $TGTDEV
   o # clear the in memory partition table
   n # new partition
   p # primary partition
   1 # partition number 1
     # default - start at beginning of disk 
     # default full disk partition
+  Y # Wipe signature (in case disk is not new)
   t # partition type
   8e # type 8e LVM
   a # make a partition bootable
   w # write the partition table
 EOF
+                                echo "Done partitioning non-UEFI"
+                                wait 20
                                 ;;
                         *) echo "Invalid input"
                                 exit 1
@@ -73,19 +79,28 @@ EOF
                         esac
 
                 ## Generating LVM Partitions and disks
+                echo "Creating LVM disk"
                 pvcreate --dataalignment 1m $TGTDEV
+                echo "Creating volume group"
                 vgcreate volgroup0 $TGTDEV
+                echo "Creating root and home disks" 
                 lvcreate -L 30GB volgroup0 -n lv_root
                 lvcreate -l 100%FREE volgroup0 -n lv_home
+                echo "Ensuring this is persistent on boot"
                 modprobe dm_mod
+                echo "running vgscan"
                 vgscan
                 vgchange -ay
+                echo "fomatting disks"
                 mkfs.ext4 /dev/volgroup0/lv_root
                 mkfs.ext4 /dev/volgroup0/lv_home
+                echo "Mount root in /mnt"
                 mount /dev/volgroup0/lv_root /mnt
+                echo "Create home, etc directories, and mounting home partiton in /mnt/home" 
                 mkdir /mnt/home
                 mkdir /mnt/etc
                 mount /dev/volgroup0/lv_home /mnt/home
+                echo "create fstab file"
                 genfstab -U -p /mnt >> /mnt/etc/fstab
                 cat /mnt/etc/fstab
                 read -p 'Done, if everything looks good,please reboot now: REBOOT (Y,N)?' rebootyno

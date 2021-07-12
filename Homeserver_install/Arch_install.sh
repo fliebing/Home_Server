@@ -177,7 +177,7 @@ echo "install GRUB (FINALLY able to boot from HDD)"
         esac
 
 cp /usr/share/locale/en\@quot/LC MESSAGES/grub.mo /boot/grub/locale/en.mo
-sed -i 's/GRUB_GFXMODE=AUTO/GRUB_GFXMODE=1440x900x32/g' /etc/default/grub
+sed -i 's/GRUB_GFXMODE=AUTO/GRUB_GFXMODE=1920x1080x32/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 #Generate password for root and new user
 passwd

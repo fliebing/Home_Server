@@ -21,7 +21,7 @@ sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-relea
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 #I need to fix this par, but this works for now, choose your machines architecture
 cpuarch=$(uname -m)
-echo "Select correct Architecture, tour system says you have ($cpuarch) [(1)x86_64/amd64, (2)armhf, (3)arm64]" 
+echo "Select correct Architecture, your system says you have ($cpuarch) [(1)x86_64/amd64, (2)armhf, (3)arm64]" 
 read -p "...........................................         1,2 or 3?:" arch
 echo ""
 if [ arch == "1" ]; then

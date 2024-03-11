@@ -1,7 +1,7 @@
 # **About this code**
 
 Every MD file in this folder will contain the expalanation to the code in the correponding folder.
-This code is provided with no support, as this is documentation of my own lab projects rather than a finished product.
+This code is provided with no support, as this is documentation of my own lab projects.
 
 # **Security Information**
 Please feel free to use the code for your purposes I am trying to keep the code as clean as possible while allowing the users to choose the passwords being used or generating them randomly and therefore eliminating the possibility that I or anyone else would be able to know the passwords/secrets for the new deployments. 
@@ -33,32 +33,29 @@ Date | Changes | Tested
 
     See diagram for details.
 
-                                           +--------------+              +---------+
- +------------------------------+        ---  Firewall 1  -------\       |         |
- |                              |  -----/  +--------------+       --------         |
- |              LAB             --/                                      |  ISP    |
- |            Switch            --\                                   ---- ROUTER  |
- |                              |  -----\  +--------------+   -------/   |         |
- |                              |        --- Firewall 2   ---/           |         |
- +---------------|--------------+          +--------------+              |         |
-        /        |       \                                               +---------+
-       /         |        \                                                         
-      /          |         \                                                        
-     /           |          \                                                       
-    /            |           \                                                      
-+--/--+       +-----+      +-----+                                                  
-|     |       |     |      |     |                                                  
-| K3S |       | K3S |      | K3S |                                                  
-|     |       |     |      |     |                                                  
-|     |       |     |      |     |                                                  
-| SRV |       | SRV |      | SRV |                                                  
-|  +  |       |  +  |      |  +  |                                                  
-| WRK |       | WRK |      | WRK |                                                  
-+-----+       +--|--+      +-----+                                                  
-    \-           |          -/                                                      
-      \-        /         -/                                                        
-+-------\-------|--------/------+                                                   
-|                               |                                                   
-|           NAS                 |                                                   
-|                               |                                                   
-+-------------------------------+   
+                                                   +--------------+              +---------+
+                                            -------+  Firewall 1  +--------------+         |
+         +------------------------------+  /       +--------------+------\/------+   ISP   |
+         |              LAB             +--        +--------------+------/\------+ ROUTERS |
+         |            Switch            +----------+ Firewall 2   +--------------+         |
+         |                              |          +--------------+              +---------+
+         |                              +-----                                  
+         +------/--------|-------\------+     \                                  
+               /         |        \            \                                 
+              /          |         \            \  +--------------+  
+             /           |          \            --+  PXE/Ansible |                                                                
+            /            |           \             +--------------+                                        
+        +--+--+       +--+--+      +--+--+                                                  
+        |     |       |     |      |     |                                                  
+        | K3S |       | K3S |      | K3S |                                                  
+        |     |       |     |      |     |                                                  
+        |     |       |     |      |     |                                                  
+        | SRV |       | SRV |      | SRV |                                                  
+        |  +  |       |  +  |      |  +  |                                                  
+        | WRK |       | WRK |      | WRK |                                                  
+        +--+--+       +--+--+      +--+--+                                                  
+            \            |           /                                                      
+             \           |          /                                                        
+        +-----\----------|---------/----+                                                                                                      
+        |               NAS             |                                                                                                    
+        +-------------------------------+   

@@ -63,11 +63,11 @@ Simplified Network diagram:
 In order to make this deployment flow in a logical manner I suggest you deploy the systems out in this order:
 1) Database server: You will need it for semaphore and other items to come.
     a. Needed for the larger project
-    b. Follow instructions [here](Database.md)
+    b. Follow instructions [here](Instructions_4_Component_setup/Database.md)
 
 2) Ansible with semaphore: Will help you deploy all the rest of the servers in the build, but needs a database
-    a.  Ansible deployments are very simple, you can use the turnkey ansible from Proxmox or install ansible using the [ansible_setup.sh](Ansible/ansible_setup.sh) script
-    b. After the Ansible install, you need to copy the playbooks you will use into the Ansible or install Semaphore following [this](Semaphore.md)
+    a.  Ansible deployments are very simple, you can use the turnkey ansible from Proxmox or install ansible using the [ansible_setup.sh](Bash_Scripts/Ansible/ansible_setup.sh) script
+    b. After the Ansible install, you need to copy the playbooks you will use into the Ansible or install Semaphore following [this](Instructions_4_Component_setup/Semaphore.md)
 
 3) Webserver: First one built with Ansible, used to test deploy scripts in Semaphore. Good test as this is a simple server.
     a. The webroot is: /usr/share/nginx/html/index.html
@@ -84,7 +84,7 @@ Notes:
     
 2. This guide for PXE works on OPNSENSE Firewalls to enable PXE from there. You may have a different Firewall that may not provide this option. When I did not have OPNSENSE I used FOG as the PXE boot and image deployment solution.
 
-For instructions on how to get PXE to boot Arch Linux or Debian, see the [PXE_setup.md](PXE_setup.md)
+For instructions on how to get PXE to boot Arch Linux or Debian, see the [PXE_setup.md](Instructions_4_Component_setup/PXE_setup.md)
 
     ### **PXE Booting Lenovo miniPc**  F12 while booting up to get to the Boot sequence selector.
 Choose Network Boot, this is the second option, just in case you do not have a monitor or KVM connected to the system

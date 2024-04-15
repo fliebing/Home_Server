@@ -5,6 +5,39 @@ PXE servers have 2 parts:
 TFTP server to serve the bootloader and other files necessary for network booting.
 DHCP configuration to respond to PXE requests with info including where to find the TFTP server and the bootloader file to start the network booting process.
 
+
+### Adding SSH key to OPNsense:
+1. Create SSH key in local computer: 
+
+for MAC use:
+``` ssh-keygen -t ed25519  ``` 
+```
+        you will find the SSH key generated in ~/.ssh
+```
+
+2. Copy the public key to your clipboard. (the one ending in .pub)
+
+for MAC use:
+  ``` pbcopy < ~/.ssh/id_rsa.pub ```
+
+2. Browse to OPNsense and login.
+3. Navigate to System, Access, Users. 
+4. Locate the user you want the SSH key for (e.g. root) and click the pencil icon to edit.
+5. At the bottom of the page paste the public key into the Authorized Keys field. 
+====================================================================================
+6. Navigate to System, Settings, Administration.
+7. Scroll down to the Secure Shell portion and:
+```
+7.1. tick the Enable Secure Shell
+7.2. tick Permit root user login (ONLY IF USING ROOT AS YOUT USER, PLEASE DON'T)
+7.3. untick the Permit Password login box.
+```
+8. If you haven’t already enabled SSH, you can do it here as well. 
+9. Scroll all the way down and click Save.
+10. Go to a terminal and run ```ssh root@YOUR_Firewall_IP}```
+
+
+
 ### TFTP/HTTP/PXE setup:
 
 1. Install the tftp plugin in OPNSense
@@ -18,12 +51,14 @@ You will get a message:
  ``` The root folder for transfering files is /usr/local/tftp. ```
 
 Once the WebUI refreshes entry appears in Services > TFTP > General where the service can be enabled or disabled.
-Go to the TFTP item in the Services and enable it, place listneer ot 0.0.0.0 (all interfaces)
+Go to the TFTP item in the Services and enable it, place listener ot 0.0.0.0 (all interfaces)
 
 2. SSH into your web server and create the Directories we will need for the images: I am going to use ARCH and Debian as an example
 ```
-mkdir -p /var/www/isos/ARCH/
-mkdir -p /var/www/isos/Debian/
+mkdir -p /usr/share/nginx/isos/ARCH/
+mkdir -p /usr/share/nginx/isos/Debian/
+mkdir /etc/nginx/sites-available
+mkdir /etc/nginx/sites-enabled
 ```
 
 3. Now Create the website and enable it to serve the static files to our PXE clients:
@@ -32,17 +67,17 @@ touch /etc/nginx/sites-available/isos
     tee -a /etc/nginx/sites-available/isos > /dev/null <<EOF
 server {
     listen        8080 default_server;
-        root /var/www/isos;
+        root /usr/share/nginx/isos;
 
         # Add index.php to the list if you are using PHP
-#        index index.html index.htm index.nginx-debian.html;
+        index index.html index.htm index.nginx-debian.html;
 
         server_name _;
 
         location / {
                 # First attempt to serve request as file, then
                 # as directory, then fall back to displaying a 404.
-                try_files $uri $uri/ =404;
+#                try_files $uri $uri/ =404;
                 autoindex on;
                 autoindex_exact_size off;
         }
@@ -52,11 +87,20 @@ EOF
 
 ln -s /etc/nginx/sites-available/isos /etc/nginx/sites-enabled/
 ```
+NOTE:To enable a site, simply create a symlink:
+```
+ln -s /etc/nginx/sites-available/example.conf /etc/nginx/sites-enabled/example.conf
+```
+To disable a site, unlink the active symlink:
+```
+unlink /etc/nginx/sites-enabled/example.conf
+```
+Reload/restart nginx.service to enable changes to the site's configuration.
 
 We need to include the preseed information for Debian.
 ```
-touch /var/www/isos/Debian/preseed.cfg
-    tee -a /var/www/isos/Debian/preseed.cfg > /dev/null <<EOF
+touch /usr/share/nginx/isos/Debian/preseed.cfg
+    tee -a /usr/share/nginx/isos/Debian/preseed.cfg > /dev/null <<EOF
     #_preseed_V1
 
 # B.4.1. Localization
@@ -219,14 +263,14 @@ NOTE: We could use the TFTP server for everything, but it is better to use a web
  ```
 curl -O https://geo.mirror.pkgbuild.com/iso/2024.03.29/archlinux-2024.03.29-x86_64.iso
 mount -t cd9660 /dev/`mdconfig -a -t vnode -f archlinux-2024.03.29-x86_64.iso` /mnt
-scp -r /mnt/arch/ root@{httpserver IP}:/var/www/isos/archiso/
+scp -r /mnt/arch/ root@{httpserver IP}:/usr/share/nginx/isos/ARCH/
 umount /mnt
 ```
 ###        b. For Debian
 ```
 curl -O https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz
 tar xvzf /var/tmp/deleteme/netboot.tar.gz -C /var/tmp/deleteme
-scp -r /var/tmp/deleteme/debian-installer/ root@{httpserver IP}:/var/www/isos/Debian/
+scp -r /var/tmp/deleteme/debian-installer/ root@{httpserver IP}:/usr/share/nginx/isos/Debian/
 ```
 
 7. Clean up the TFTP server.
@@ -254,7 +298,7 @@ LABEL local
 LABEL archlinux
         MENU LABEL Arch Linux diskless/live x86_64
         LINUX http://{httpserver IP}:8080/ARCH/arch/boot/x86_64/vmlinuz-linux
-        INITRD http://{httpserver IP}:8080/ARCH/arch/boot/intel-ucode.img,http://10.23.45.245:8080/ARCH/arch/boot/amd-ucode.img,http://{httpserver IP}:8080/ARCH/arch/boot/x86_64/initramfs-linux.img
+        INITRD http://{httpserver IP}:8080/ARCH/arch/boot/intel-ucode.img,http://{httpserver IP}:8080/ARCH/arch/boot/amd-ucode.img,http://{httpserver IP}:8080/ARCH/arch/boot/x86_64/initramfs-linux.img
         APPEND ip=dhcp checksum=y archiso_http_srv=http://{httpserver IP}:8080/ archisobasedir=ARCH/arch
 
 LABEL Debian install
@@ -267,8 +311,8 @@ EOF
 
 9. SSH back into the HTTP server to fix ownership, permissions and restart nginx:
 ```
-chown -R www-data:www-data /var/www
-chmod +777 /var/www/isos
+chown -R http:http /usr/share/nginx/
+chmod +777 /usr/share/nginx/isos
 nginx -t
 systemctl restart nginx
 ```
@@ -284,7 +328,7 @@ Set Bootfile: gpxelinux.0   # This is the one we are using and has been tested i
 ```
 
 ### Testing
-1) From your browser go to http://{httpserver IP}:8080/ and browsw the directory structure.
+1) From your browser go to http://{httpserver IP}:8080/ and browse the directory structure.
 
 2) Test the TFTP from your local terminal.
 ```

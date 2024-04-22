@@ -1,5 +1,6 @@
 ---
 - hosts: archinstall
+  gather_facts: yes
   tasks:
     - name: Abort if the host is not booted from the Arch install media
       fail:
@@ -7,123 +8,17 @@
       when: ansible_nodename != 'archiso'
       tags:
         - quick_exit
-    - name: Synchronize clock via NTP
-      command: timedatectl set-ntp true
-      tags:
-        - sync_clock
-    - name: Repartition install drive
-      block:
-        - name: Wipe install drive and all its partitions
-          command: find /dev -wholename "{{ install_drive }}*" -exec wipefs --force --all {} \;
-          tags:
-            - wipefs
-        - name: Create boot partition
-          parted:
-            device: '{{ install_drive }}'
-            label: gpt
-            number: 1
-            part_end: 512MB
-            name: boot
-            flags: [boot, esp]
-            state: present
-        - name: Create root partition
-          parted:
-            device: '{{ install_drive }}'
-            label: gpt
-            number: 2
-            part_start: 512MB
-            name: root
-            flags: [lvm]
-            state: present
-      tags:
-        - repartition
-    - name: Setup LVM root and tmp volumes
-      block:
-        - name: Remove existing volume group
-          lvg:
-            vg: VolumeGroup00
-            force: yes
-            state: absent
-        - name: Configure volume group
-          lvg:
-            vg: VolumeGroup00
-            pvs:
-              - '{{ install_drive }}{{ root_partition_suffix }}'
-        - name: Configure logical volumes
-          lvol:
-            vg: VolumeGroup00
-            lv: '{{ item.lv }}'
-            size: '{{ item.size }}'
-          loop:
-            - {lv: tmp, size: 512m}
-            - {lv: root, size: "100%FREE"}
-      tags:
-        - lvm
-    - name: Setup LUKS encryption for root filesystem
-      block:
-        - name: Copy keyfile
-          copy:
-            src: '{{ luks_keyfile }}'
-            dest: /root/keyfile
-        - name: Destroy existing LUKS volume
-          luks_device:
-            device: /dev/VolumeGroup00/root
-            state: absent
-        - name: Create and open LUKS volume
-          luks_device:
-            device: /dev/VolumeGroup00/root
-            keyfile: /root/keyfile
-            name: root
-            state: opened
-        - name: Get UUID for root LUKS volume
-          command: blkid -s UUID -o value /dev/VolumeGroup00/root
-          register: root_luks_uuid
-          changed_when: false
-      tags:
-        - luks
-    - name: Create filesystems
-      block:
-        - name: Create FAT32 filesystem in boot partition
-          filesystem:
-            dev: '{{ install_drive }}{{ boot_partition_suffix }}'
-            fstype: vfat
-            opts: -F32
-            force: yes
-        - name: Create ext4 filesystem in root volume
-          filesystem:
-            dev: /dev/mapper/root
-            fstype: ext4
-            force: yes
-        - name: Get UUID for boot filesystem
-          command: blkid -s UUID -o value '{{ install_drive }}{{ boot_partition_suffix }}'
-          register: boot_uuid
-          changed_when: false
-        - name: Get UUID for root filesystem
-          command: blkid -s UUID -o value /dev/mapper/root
-          register: root_uuid
-          changed_when: false
-      tags:
-        - create_filesystems
-    - name: Mount filesystems
-      block:
-        - name: Mount root filesystem
-          mount:
-            path: /mnt
-            src: UUID={{ root_uuid.stdout }}
-            fstype: ext4
-            state: mounted
-        - name: Create mountpoint for boot volume
-          file:
-            path: /mnt/boot
-            state: directory
-        - name: Mount boot filesystem
-          mount:
-            path: /mnt/boot
-            src: UUID={{ boot_uuid.stdout }}
-            fstype: vfat
-            state: mounted
-      tags:
-        - mount_filesystems
+    - include: tasks/Generic/Maintenance/Sync_clocks.yml
+    - include: tasks/Generic/Install/Partition_drive.yml
+    - include: tasks/Generic/Install/New_LVM.yml
+    - include: tasks/Generic/Install/Config_LUKS.yml
+    - include: tasks/Generic/Install/Create_Mount_FS.yml
+
+
+
+
+
+
     - name: Run pacstrap
       command: pacstrap /mnt base dhclient dhcpcd efibootmgr grub linux linux-firmware lvm2 netctl openssh python reflector sudo
       tags:

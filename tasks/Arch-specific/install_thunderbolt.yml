@@ -1,0 +1,10 @@
+---
+
+    - name: Install and enable bolt
+      block:
+        - name: Install bolt
+          ansible.builtin.command: arch-chroot /mnt pacman --sync --noconfirm bolt
+        - name: Enable bolt service
+          ansible.builtin.command: arch-chroot /mnt systemctl enable bolt.service
+      tags:
+        - thunderbolt

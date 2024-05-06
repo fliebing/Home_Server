@@ -1,4 +1,4 @@
-
+---
     - name: Setup LUKS encryption for root filesystem
       block:
         - name: Copy keyfile

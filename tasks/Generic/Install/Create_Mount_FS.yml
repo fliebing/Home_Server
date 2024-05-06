@@ -1,4 +1,4 @@
-
+---
     - name: Create filesystems
       block:
         - name: Create FAT32 filesystem in boot partition

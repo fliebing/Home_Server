@@ -1,3 +1,4 @@
+---
     - name: Setup LVM root and tmp volumes
       block:
         - name: Remove existing volume group

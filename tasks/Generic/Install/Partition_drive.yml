@@ -1,3 +1,4 @@
+---
     - name: Repartition drive
       block:
         - name: Wipe install drive and all its partitions

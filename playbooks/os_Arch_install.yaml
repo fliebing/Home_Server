@@ -2,18 +2,18 @@
 - hosts: archinstall
   gather_facts: yes
   tasks:
-    - include: tasks/Generic/Maintenance/check_boot_img.yml
-    - include: tasks/Generic/Maintenance/Sync_clocks.yml
-    - include: tasks/Generic/Install/Partition_drive.yml
-    - include: tasks/Generic/Install/New_LVM.yml
-    - include: tasks/Generic/Install/Config_LUKS.yml
-    - include: tasks/Generic/Install/Create_Mount_FS.yml
-    - include: tasks/Arch-specific/base_config.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Maintenance/check_boot_img.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Maintenance/Sync_clocks.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Install/Partition_drive.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Install/New_LVM.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Install/Config_LUKS.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Install/Create_Mount_FS.yml
+    - ansible.builtin.include_tasks: tasks/Arch-specific/base_config.yml
 
 - hosts: thunderbolt
   tasks:
-    - include: tasks/Arch-specific/install_thunderbolt.yml
+    - ansible.builtin.include_tasks: tasks/Arch-specific/install_thunderbolt.yml
 
 - hosts: all
   tasks:
-    - include: tasks/Generic/Maintenance/reboot.yml
+    - ansible.builtin.include_tasks: tasks/Generic/Maintenance/reboot.yml

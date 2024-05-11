@@ -11,7 +11,9 @@
     - include: tasks/Arch-specific/base_config.yml
 
 - hosts: thunderbolt
-  include: tasks/Arch-specific/install_thunderbolt.yml
+  tasks:
+    - include: tasks/Arch-specific/install_thunderbolt.yml
 
 - hosts: all
-  include: tasks/Generic/Maintenance/reboot.yml
+  tasks:
+    - include: tasks/Generic/Maintenance/reboot.yml

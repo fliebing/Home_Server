@@ -1,0 +1,23 @@
+---
+    - name: Setup LVM root and tmp volumes
+      block:
+        - name: Remove existing volume group
+          lvg:
+            vg: VolumeGroup00
+            force: yes
+            state: absent
+        - name: Configure volume group
+          lvg:
+            vg: VolumeGroup00
+            pvs:
+              - '{{ target_drive }}{{ root_partition_suffix }}'
+        - name: Configure logical volumes
+          lvol:
+            vg: VolumeGroup00
+            lv: '{{ item.lv }}'
+            size: '{{ item.size }}'
+          loop:
+            - {lv: tmp, size: 512m}
+            - {lv: root, size: "100%FREE"}
+      tags:
+        - lvm

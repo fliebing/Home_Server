@@ -1,0 +1,29 @@
+- name: Configure FreeBSD Systems
+  hosts: freebsd
+  become: yes
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Configure static IP for FreeBSD
+      lineinfile:
+        path: /etc/rc.conf
+        line: |
+          ifconfig_em0="inet {{ ansible_default_ipv4.address }} netmask 255.255.255.0"
+          defaultrouter="{{ gateway_ip }}"
+      when: ansible_hostname not in ['freebsd_host']
+
+    - name: Install required packages
+      pkgng:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ required_packages_freebsd }}"
+
+    - name: Start and enable services
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ services_freebsd }}"
+

@@ -1,0 +1,22 @@
+---
+
+    - name: Install and enable bolt
+      block:
+        - name: Install bolt
+          ansible.builtin.command: arch-chroot /mnt pacman --sync --noconfirm bolt
+        - name: Enable bolt service
+          ansible.builtin.command: arch-chroot /mnt systemctl enable bolt.service
+      tags:
+        - thunderbolt
+
+
+    - name: 'Install packages'
+      tags:
+        - PKG_INSTALLER
+    - name: Install iptables-nft
+      shell: "yes | pacman -S --needed iptables-nft"
+    - name: Install packages from package list
+      become: false
+      shell: |
+        yes | sudo pacman -S --needed - < /home/{{ username }}/pkglist.txt --noconfirm
+        rm /home/{{ username }}/pkglist.txt

@@ -1,0 +1,44 @@
+---
+    - name: Create filesystems
+      block:
+        - name: Create FAT32 filesystem in boot partition
+          filesystem:
+            dev: '{{ install_drive }}{{ boot_partition_suffix }}'
+            fstype: vfat
+            opts: -F32
+            force: yes
+        - name: Create ext4 filesystem in root volume
+          filesystem:
+            dev: /dev/mapper/root
+            fstype: ext4
+            force: yes
+        - name: Get UUID for boot filesystem
+          command: blkid -s UUID -o value '{{ install_drive }}{{ boot_partition_suffix }}'
+          register: boot_uuid
+          changed_when: false
+        - name: Get UUID for root filesystem
+          command: blkid -s UUID -o value /dev/mapper/root
+          register: root_uuid
+          changed_when: false
+      tags:
+        - create_filesystems
+    - name: Mount filesystems
+      block:
+        - name: Mount root filesystem
+          mount:
+            path: /mnt
+            src: UUID={{ root_uuid.stdout }}
+            fstype: ext4
+            state: mounted
+        - name: Create mountpoint for boot volume
+          file:
+            path: /mnt/boot
+            state: directory
+        - name: Mount boot filesystem
+          mount:
+            path: /mnt/boot
+            src: UUID={{ boot_uuid.stdout }}
+            fstype: vfat
+            state: mounted
+      tags:
+        - mount_filesystems

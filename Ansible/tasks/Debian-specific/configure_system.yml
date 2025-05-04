@@ -1,0 +1,40 @@
+- name: Configure Debian Systems
+  hosts: debian
+  become: yes
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Configure network for Debian (DHCP)
+      lineinfile:
+        path: /etc/network/interfaces
+        line: |
+          auto eth0
+          iface eth0 inet dhcp
+      when: ansible_hostname in ['debian_host2']
+
+    - name: Configure static IP for Debian
+      lineinfile:
+        path: /etc/network/interfaces
+        line: |
+          auto eth0
+          iface eth0 inet static
+          address {{ ansible_default_ipv4.address }}
+          netmask 255.255.255.0
+          gateway {{ gateway_ip }}
+          dns-nameservers {{ dns_ip }}
+      when: ansible_hostname not in ['debian_host2']
+
+    - name: Install required packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ required_packages }}"
+
+    - name: Start and enable services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ services }}"

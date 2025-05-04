@@ -1,0 +1,88 @@
+- name: Setup Arch Linux with MariaDB
+  hosts: arch
+  become: yes
+  tasks:
+    - name: Clear pacman GPG keys
+      command: rm -rf /etc/pacman.d/gnupg/*
+      ignore_errors: yes
+
+    - name: Initialize pacman keyring
+      command: pacman-key --init
+
+    - name: Populate archlinux keyring
+      command: pacman-key --populate archlinux
+
+    - name: Update system and install archlinux-keyring
+      pacman:
+        name:
+          - archlinux-keyring
+        state: latest
+        update_cache: yes
+
+    - name: System update
+      pacman:
+        name: "*"
+        state: latest
+        update_cache: yes
+        validate_certs: no
+
+    - name: Install OpenSSH
+      pacman:
+        name: openssh
+        state: present
+        update_cache: yes
+
+    - name: Restart SSH service
+      systemd:
+        name: sshd
+        state: restarted
+        enabled: yes
+
+    - name: Install python-pip
+      pacman:
+        name: python-pip
+        state: present
+        update_cache: yes
+
+    - name: Install MariaDB
+      pacman:
+        name: mariadb
+        state: present
+        update_cache: yes
+
+    - name: Initialize MariaDB database
+      command: mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+
+    - name: Start and enable MariaDB service
+      systemd:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Run mysql_secure_installation
+      expect:
+        command: mysql_secure_installation
+        responses:
+          "Would you like to setup a root password?": "n"
+          "Remove anonymous users?": "y"
+          "Disallow root login remotely?": "y"
+          "Remove test database and access to it?": "y"
+          "Reload privilege tables now?": "y"
+      when: ansible_hostname not in ['arch_host2']
+
+    - name: Create Semaphore database
+      mysql_db:
+        name: "{{ mariadb_db }}"
+        state: present
+        login_user: root
+        login_password: "{{ mariadb_password }}"
+
+    - name: Create user and grant privileges
+      mysql_user:
+        name: "{{ mariadb_user }}"
+        password: "{{ mariadb_password }}"
+        host: "%"
+        priv: "{{ mariadb_db }}.*:ALL"
+        state: present
+        login_user: root
+        login_password: "{{ mariadb_password }}"

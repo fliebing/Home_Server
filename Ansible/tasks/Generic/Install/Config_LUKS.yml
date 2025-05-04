@@ -1,0 +1,23 @@
+---
+    - name: Setup LUKS encryption for root filesystem
+      block:
+        - name: Copy keyfile
+          copy:
+            src: '{{ luks_keyfile }}'
+            dest: /root/keyfile
+        - name: Destroy existing LUKS volume
+          luks_device:
+            device: /dev/VolumeGroup00/root
+            state: absent
+        - name: Create and open LUKS volume
+          luks_device:
+            device: /dev/VolumeGroup00/root
+            keyfile: /root/keyfile
+            name: root
+            state: opened
+        - name: Get UUID for root LUKS volume
+          command: blkid -s UUID -o value /dev/VolumeGroup00/root
+          register: root_luks_uuid
+          changed_when: false
+      tags:
+        - luks

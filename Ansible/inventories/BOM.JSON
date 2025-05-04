@@ -1,0 +1,68 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:YOUR-UUID-HERE",
+  "version": 2,
+  "metadata": {
+    "timestamp": "2025-05-02T00:00:00Z",
+    "tools": [
+      {
+        "vendor": "tagitek",
+        "name": "BOM Generator",
+        "version": "2.1.0"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "hardware",
+      "bom-ref": "hw-pve0",
+      "name": "pve-node-0.abc.com",
+      "properties": [
+        { "name": "CPU",    "value": "16 cores" },
+        { "name": "Memory", "value": "64GB" }
+      ],
+      "extensions": [
+        {
+          "extensionType": "tagitek.config",
+          "roles": [ "proxmox-base" ],
+          "ansiblePlaybook": "playbooks/infrastructure/pve-node.yml",
+          "env": {
+            "PVE_NODE": "pve-node-0.abc.com"
+          }
+        }
+      ]
+    },
+ 
+    {
+      "type": "virtual-machine",
+      "bom-ref": "vm-control-01",
+      "name": "control01.bbb.com",
+      "version": "Debian 12 template",
+      "properties": [
+        { "name": "CPU",     "value": "4 cores" },
+        { "name": "Memory",  "value": "8GB" },
+        { "name": "Storage", "value": "50GB root" },
+        { "name": "Network", "value": "VLAN120; IP:101.213.120.34" }
+      ],
+      "extensions": [
+        {
+          "extensionType": "tagitek.config",
+          "roles": [ "control-node", "ansible-master" ],
+          "ansiblePlaybook": "playbooks/control/control-node.yml",
+          "env": {
+            "ANSIBLE_HOST_KEY_CHECKING": "False",
+          },
+          "volumes": [
+            "/mnt/storage/control/config:/etc/ansible",
+          ],
+          "ports": [ "22/tcp", "5678/tcp", "1880/tcp", "5671/tcp" ]
+        }
+      ]
+    },
+  "dependencies": [
+    { "ref": "hw-pve0", "dependsOn": [] },
+    { "ref": "vm-control-01",         "dependsOn": [ "hw-pve1" ] },
+  ]
+}
+

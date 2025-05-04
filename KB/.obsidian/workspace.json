@@ -1,0 +1,206 @@
+{
+  "main": {
+    "id": "3896fad99d8783ae",
+    "type": "split",
+    "children": [
+      {
+        "id": "a90164d88bff39ba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cbe347d9beba124b",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.8.10"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.8.10"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "731c1eb082248e67",
+    "type": "split",
+    "children": [
+      {
+        "id": "596a7ed537f21037",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "653c04c0e06975aa",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a08da104231f0841",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "9fa83aca3be21a8a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "89f48634b4085ba1",
+    "type": "split",
+    "children": [
+      {
+        "id": "f970bb8fad371e52",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8a9d207f30a799a4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "4205994023ff0326",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "ebfb55765a8c2587",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d50b334e7a76788a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
+    }
+  },
+  "active": "cbe347d9beba124b",
+  "lastOpenFiles": [
+    "Instructions_4_Component_setup/proxmox.md",
+    "Instructions_4_Component_setup/Webserver.md",
+    "Instructions_4_Component_setup/Telegram-chat-id.md",
+    "Instructions_4_Component_setup/Semaphore.md",
+    "Instructions_4_Component_setup/PXE_setup.md",
+    "Instructions_4_Component_setup/Database.md",
+    "Instructions_4_Component_setup",
+    "Assets/Scripts",
+    "Assets/Templates/99 - Index/99.1 - Index.md",
+    "Assets/Templates/99 - Index",
+    "Assets/Templates/18 - Geographic/18.3 - Location.md",
+    "Assets/Templates/18 - Geographic/18.2 - City.md",
+    "Assets/Templates/18 - Geographic/18.1 - Country.md",
+    "Assets/Templates/18 - Geographic",
+    "Assets/Templates/17 - WordDictionary/17.1 - WordDictionary.md",
+    "Assets/Templates/17 - WordDictionary",
+    "Assets/Templates/16 - Investment/16.1 - Stocks.md",
+    "Assets/Templates/16 - Investment",
+    "Assets/Templates/15 - Company/15.3 - Department.md",
+    "Assets/Templates/15 - Company/15.2 - Company_V2.md",
+    "Assets/Templates/15 - Company/15.1 - Company.md",
+    "Assets/Templates/15 - Company",
+    "Assets/Templates/14 - Trackers/14.3 - DailyTracker.md",
+    "Assets/Templates/14 - Trackers/14.2 - HabitChallenge.md",
+    "Assets/Templates/14 - Trackers/14.1 - SlipBox.md",
+    "Assets/Templates/14 - Trackers",
+    "Assets/Templates/13 - Meeting/13.2 - DailyCheckIn.md",
+    "Assets/Templates/13 - Meeting/13.1 - Meeting.md",
+    "Assets/Templates/13 - Meeting",
+    "Assets/Templates/12 - Contact/12.2 - Contact_V2.md",
+    "Assets/Templates/12 - Contact/12.1 - Contact.md",
+    "Assets/Templates/12 - Contact",
+    "Assets/Templates/11 - Application/11.1 - Application.md",
+    "Assets/Templates/10 - Entertainment/10.4 - Movies&Shows_V2.md",
+    "Assets/Templates/10 - Entertainment/10.3 - Game.md",
+    "Assets/Templates/10 - Entertainment/10.2 - Movies&ShowReview.md"
+  ]
+}

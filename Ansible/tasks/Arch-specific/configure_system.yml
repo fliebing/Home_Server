@@ -1,0 +1,44 @@
+- name: Configure Arch Systems
+  hosts: arch
+  become: yes
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Configure network for Arch (DHCP)
+      lineinfile:
+        path: /etc/systemd/network/10-eth0.network
+        line: |
+          [Match]
+          Name=eth0
+
+          [Network]
+          DHCP=yes
+      when: ansible_hostname in ['arch_host2']
+
+    - name: Configure static IP for Arch
+      lineinfile:
+        path: /etc/systemd/network/10-eth0.network
+        line: |
+          [Match]
+          Name=eth0
+
+          [Network]
+          Address={{ ansible_default_ipv4.address }}/24
+          Gateway={{ gateway_ip }}
+          DNS={{ dns_ip }}
+      when: ansible_hostname not in ['arch_host2']
+
+    - name: Install required packages
+      pacman:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ required_packages_arch }}"
+
+    - name: Start and enable services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ services_arch }}"

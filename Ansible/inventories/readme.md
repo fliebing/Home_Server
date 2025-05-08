@@ -1,7 +1,11 @@
-Thought for a couple of seconds
+After giving it some thought, I came to the conclusion that there must be a better way to have a single source of truth in the environment, and not have to deal with ansible inventories and additional configs. The answer was to use a CycloneDX base BOM, and instead of genrating several different BOM files from it, I would rather just have everything in a single compact file. Similar to the way that the environments are normally documented for presewntation to a client.
+
+This evolved in several iterations. This is an intermediate one, that works well for the home lab use case, but there is a more complete format that is used for TAGI (Technical Assistance Geenral Inteligence) operations.
+
+As this is cycloneDX based, the fomrat is both human understandable and machine readable, and it has the advantage of easily be used in tooling for vulnerability checking and such.
 
 
-Here’s a JSON Schema (draft-07) for your BOM.json and accompanying documentation explaining each top-level section and field.
+Here’s a JSON Schema for BOM.json and accompanying documentation explaining each top-level section and field.
 
 ```json
 {
@@ -178,23 +182,23 @@ Here’s a JSON Schema (draft-07) for your BOM.json and accompanying documentati
 
 An array of individual system pieces. Each component object has:
 
-| Field            | Type      | Required? | Description                                                        |               |
-| ---------------- | --------- | --------- | ------------------------------------------------------------------ | ------------- |
-| **type**         | string    | yes       | One of `hardware`, `virtual-machine`, `container`.                 |               |
-| **bom-ref**      | string    | yes       | Unique ID to reference in dependencies.                            |               |
-| **name**         | string    | yes       | Hostname or container name.                                        |               |
-| **version**      | string    | no        | OS template or image version (e.g., `Debian 12`, `MariaDB:10.11`). |               |
-| **properties**   | array     | yes       | Key/value attributes like CPU, Memory, Network, etc.               |               |
-| **extensions**   | array     | yes       | Tagitek custom config with:                                        |               |
-|  extensionType   | string    | yes       | Always `tagitek.config`.                                           |               |
-|  roles           | string\[] | yes       | Ansible roles applied.                                             |               |
-|  ansiblePlaybook | string    | yes       | Path to Playbook.                                                  |               |
-|  env             | object    | no        | Environment variables.                                             |               |
-|  volumes         | string\[] | no        | Host\:container volume mappings.                                   |               |
-|  ports           | string\[] | no        | Exposed ports, in \`"<port>/\<tcp                                  | udp>"\` form. |
-|  schedules       | object    | no        | Cron schedule and backup playbook path.                            |               |
-|  n8nWorkflows    | string\[] | no        | Paths to n8n workflow JSONs.                                       |               |
-|  n8nNodes        | string\[] | no        | Paths to n8n node JSONs.                                           |               |
+| Field            | Type      | Required? | Description                                                        |
+| ---------------- | --------- | --------- | ------------------------------------------------------------------ |
+| **type**         | string    | yes       | One of `hardware`, `virtual-machine`, `container`.                 |
+| **bom-ref**      | string    | yes       | Unique ID to reference in dependencies.                            |
+| **name**         | string    | yes       | Hostname or container name.                                        |
+| **version**      | string    | no        | OS template or image version (e.g., `Debian 12`, `MariaDB:10.11`). |
+| **properties**   | array     | yes       | Key/value attributes like CPU, Memory, Network, etc.               |
+| **extensions**   | array     | yes       | Tagitek custom config with:                                        |
+|  extensionType   | string    | yes       | Always `tagitek.config`.                                           |
+|  roles           | string\[] | yes       | Ansible roles applied.                                             |
+|  ansiblePlaybook | string    | yes       | Path to Playbook.                                                  |
+|  env             | object    | no        | Environment variables.                                             |
+|  volumes         | string\[] | no        | Host\:container volume mappings.                                   |
+|  ports           | string\[] | no        | Exposed ports, in \`"<port>/\<tcp udp>"\` form.                    |
+|  schedules       | object    | no        | Cron schedule and backup playbook path.                            |
+|  n8nWorkflows    | string\[] | no        | Paths to n8n workflow JSONs.                                       |
+|  n8nNodes        | string\[] | no        | Paths to n8n node JSONs.                                           |
 
 *Note*: only the fields actually present in your BOM need to be provided; others are optional and validated if present.
 
@@ -226,4 +230,4 @@ means `control01.tagitek.com` relies on the physical host `hw-pve1` being availa
 
 ---
 
-This schema and docs will ensure any future BOM you produce is validated, consistent, and self-describing, while still flexible enough to capture your Tagitek extensions.
+This schema and docs will ensure any future BOM you produce is validated, consistent, and self-describing, while still flexible enough to capture your environment extensions.
